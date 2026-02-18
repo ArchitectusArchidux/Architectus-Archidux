@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARCHITECTUS · Audit & Conseil</title>
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --deep-space: #0c0b0e;
+      --charcoal: #1e1c22;
+      --gilt: #bfa37c;
+      --gilt-light: #d8c5a8;
+      --ivory: #f0ebe5;
+      --glass: rgba(255, 255, 255, 0.05);
+      --font-serif: 'Playfair Display', serif;
+      --font-sans: 'Montserrat', sans-serif;
+      --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    body {
+      background-color: var(--deep-space);
+      color: var(--ivory);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* glassmorphism & textures */
+    .glass-card {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(191, 163, 124, 0.15);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+
+    .glass-card:hover {
+      border-color: var(--gilt);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(191, 163, 124, 0.3);
+      transform: translateY(-8px);
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 10vw, 5.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--gilt-light);
+    }
+
+    .separator {
+      display: inline-block;
+      margin: 0 0.5rem;
+      font-weight: 300;
+      color: var(--gilt);
+    }
+
+    /* navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 1.8rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      mix-blend-mode: exclusion;
+      transition: background 0.3s, padding 0.3s;
+    }
+
+    .navbar.scrolled {
+      background: rgba(12, 11, 14, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 1rem 3rem;
+      border-bottom: 1px solid rgba(191, 163, 124, 0.3);
+    }
+
+    .logo {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: 4px;
+      color: var(--ivory);
+      text-decoration: none;
+    }
+    .logo span {
+      color: var(--gilt);
+      font-weight: 300;
+      margin: 0 4px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.8rem;
+    }
+    .nav-links a {
+      color: var(--ivory);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 400;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0%;
+      height: 1px;
+      background-color: var(--gilt);
+      transition: width 0.3s;
+    }
+    .nav-links a:hover {
+      color: var(--gilt-light);
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    .nav-links a.active {
+      color: var(--gilt);
+    }
+    .nav-links a.active::after {
+      width: 100%;
+      background-color: var(--gilt);
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: var(--ivory);
+    }
+
+    /* sections */
+    section {
+      padding: 7rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      background: radial-gradient(ellipse at 30% 40%, rgba(40, 35, 45, 0.7), var(--deep-space) 70%);
+      border-bottom: 1px solid rgba(191, 163, 124, 0.2);
+      padding-top: 80px;
+    }
+
+    .hero-content {
+      max-width: 1000px;
+      padding: 0 1rem;
+    }
+
+    .hero h1 {
+      animation: fadeUp 1.2s ease-out forwards;
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .hero .subtitle {
+      animation: fadeUp 1.2s 0.3s ease-out forwards;
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .hero-cta {
+      margin-top: 3rem;
+      animation: fadeUp 1.2s 0.6s ease-out forwards;
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .btn {
+      display: inline-block;
+      background: transparent;
+      border: 1px solid var(--gilt);
+      color: var(--ivory);
+      padding: 1rem 2.8rem;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: var(--transition);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--gilt);
+      transition: left 0.4s;
+      z-index: -1;
+    }
+
+    .btn:hover {
+      color: var(--deep-space);
+      border-color: var(--gilt-light);
+    }
+
+    .btn:hover::before {
+      left: 0;
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* section header */
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    .section-header h2 {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      color: var(--gilt);
+    }
+    .section-header p {
+      max-width: 700px;
+      margin: 1rem auto 0;
+      font-size: 1.2rem;
+      font-weight: 300;
+      color: var(--gilt-light);
+    }
+
+    /* services grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin: 4rem 0;
+    }
+    .service-card {
+      background: rgba(20, 18, 24, 0.7);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(191, 163, 124, 0.1);
+      padding: 2.5rem 2rem;
+      transition: var(--transition);
+      text-align: center;
+    }
+    .service-card:hover {
+      border-color: var(--gilt);
+      background: rgba(30, 28, 34, 0.9);
+      transform: translateY(-10px);
+    }
+    .service-icon {
+      font-size: 3.5rem;
+      color: var(--gilt);
+      margin-bottom: 1.5rem;
+    }
+    .service-card h3 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .service-card p {
+      color: #ccc;
+      font-weight: 300;
+    }
+
+    /* méthodologie (timeline) */
+    .methodology {
+      background: var(--charcoal);
+      padding: 5rem 2rem;
+      margin: 0;
+      max-width: none;
+      border-top: 1px solid rgba(191, 163, 124, 0.2);
+      border-bottom: 1px solid rgba(191, 163, 124, 0.2);
+    }
+    .methodology .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .steps {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    .step {
+      flex: 1 1 200px;
+      text-align: center;
+      position: relative;
+    }
+    .step:not(:last-child)::after {
+      content: '→';
+      position: absolute;
+      right: -1.5rem;
+      top: 2rem;
+      color: var(--gilt);
+      font-size: 2rem;
+    }
+    .step-number {
+      font-size: 3rem;
+      font-family: var(--font-serif);
+      color: var(--gilt);
+      line-height: 1;
+    }
+    .step h4 {
+      margin: 1rem 0;
+      font-size: 1.5rem;
+    }
+    .step p {
+      color: #ccc;
+    }
+    @media (max-width: 800px) {
+      .step:not(:last-child)::after {
+        content: '↓';
+        right: auto;
+        top: auto;
+        bottom: -2rem;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+
+    /* stats */
+    .stats-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 2rem;
+      margin: 4rem 0;
+      text-align: center;
+    }
+    .stat-item {
+      flex: 1 1 200px;
+    }
+    .stat-number {
+      font-size: 3.5rem;
+      font-family: var(--font-serif);
+      color: var(--gilt);
+      line-height: 1;
+    }
+    .stat-label {
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      color: var(--gilt-light);
+    }
+
+    /* call to action */
+    .contact-inline {
+      text-align: center;
+      background: linear-gradient(145deg, var(--deep-space), #050405);
+      padding: 4rem 2rem;
+      border-top: 1px solid var(--gilt);
+    }
+
+    /* footer */
+    .footer {
+      background: #08070a;
+      padding: 4rem 2rem 2rem;
+      border-top: 1px solid rgba(191, 163, 124, 0.15);
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 3rem;
+    }
+    .footer-brand {
+      flex: 2 1 300px;
+    }
+    .footer-brand h3 {
+      font-size: 2.2rem;
+      color: var(--gilt);
+    }
+    .footer-brand .tagline {
+      font-style: italic;
+      color: #aaa;
+      margin: 1rem 0 2rem;
+    }
+    .footer-links {
+      flex: 1 1 150px;
+    }
+    .footer-links h5 {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      color: var(--gilt);
+    }
+    .footer-links a {
+      display: block;
+      color: #bbb;
+      text-decoration: none;
+      margin-bottom: 0.8rem;
+      transition: color 0.3s;
+    }
+    .footer-links a:hover {
+      color: var(--gilt);
+    }
+    .footer-newsletter {
+      flex: 2 1 300px;
+    }
+    .footer-newsletter p {
+      margin-bottom: 1.5rem;
+    }
+    .newsletter-form {
+      display: flex;
+      border-bottom: 1px solid var(--gilt);
+    }
+    .newsletter-form input {
+      background: transparent;
+      border: none;
+      padding: 0.8rem 0;
+      color: white;
+      flex: 1;
+      outline: none;
+    }
+    .newsletter-form button {
+      background: none;
+      border: none;
+      color: var(--gilt);
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .newsletter-form button:hover {
+      transform: translateX(5px);
+    }
+    .copyright {
+      text-align: center;
+      margin-top: 4rem;
+      color: #555;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+    }
+
+    /* reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s, transform 0.8s;
+    }
+    .reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* responsive */
+    @media (max-width: 900px) {
+      .navbar {
+        padding: 1.5rem 2rem;
+      }
+      .nav-links {
+        display: none;
+      }
+      .menu-toggle {
+        display: block;
+      }
+      .nav-links.active {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        background: rgba(12, 11, 14, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+        gap: 1.5rem;
+        border-bottom: 1px solid var(--gilt);
+      }
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc0IiBudW1PY3RhdmVzPSIzIiAvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNmKSIgb3BhY2l0eT0iMC4wMjUiIC8+PC9zdmc+');
+      pointer-events: none;
+      opacity: 0.25;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="logo">ARCHITECTUS<span>·</span>ARCHIDUX</a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Accueil</a>
+      <a href="vision.html">Vision</a>
+      <a href="realisations.html">Réalisations</a>
+      <a href="applications-web.html">Applications web</a>
+      <a href="legaltech.html">Legaltech</a>
+      <a href="sites-web.html">Sites web</a>
+      <a href="carriere.html">Carrières</a>
+      <a href="idee.html">Votre idée</a>
+      <a href="audit-conseil.html" class="active">Audit & Conseil</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
+  </nav>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <div class="hero-content">
+        <h1>audit & conseil</h1>
+        <div class="subtitle">sécurité · conformité · stratégie</div>
+        <div class="hero-cta">
+          <a href="#services" class="btn">Découvrir nos expertises</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Introduction -->
+    <section id="services">
+      <div class="section-header reveal">
+        <h2>Une double lecture : droit & tech</h2>
+        <p>Notre ADN est d’allier la rigueur juridique à la maîtrise technique. Cette dualité nous permet de réaliser des audits complets et d’offrir des conseils stratégiques qui embrassent toutes les dimensions de vos projets numériques.</p>
+      </div>
+
+      <!-- Services cards -->
+      <div class="services-grid">
+        <div class="service-card reveal">
+          <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
+          <h3>Audit de sécurité</h3>
+          <p>Analyse des vulnérabilités, tests d’intrusion, revue de code et architecture. Nous sécurisons vos applications et vos infrastructures.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><i class="fas fa-balance-scale"></i></div>
+          <h3>Audit juridique & conformité</h3>
+          <p>RGPD, contrats, conditions générales, propriété intellectuelle. Nous vérifions la conformité légale de vos produits et pratiques.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><i class="fas fa-chart-line"></i></div>
+          <h3>Conseil en transformation digitale</h3>
+          <p>Stratégie digitale, choix technologiques, feuille de route produit. Nous vous aidons à innover avec un impact mesurable.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><i class="fas fa-handshake"></i></div>
+          <h3>Accompagnement stratégique</h3>
+          <p>Due diligence, audits pré-acquisition, optimisation des processus métier. Un regard externe pour vos décisions clés.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Méthodologie -->
+    <section class="methodology" id="methodo">
+      <div class="container">
+        <div class="section-header reveal">
+          <h2>Notre approche</h2>
+          <p>Un processus en quatre étapes, de l’analyse à la recommandation actionnable.</p>
+        </div>
+        <div class="steps">
+          <div class="step reveal">
+            <div class="step-number">01</div>
+            <h4>Cadrage</h4>
+            <p>Compréhension de vos enjeux, périmètre de l’audit, collecte des documents et accès.</p>
+          </div>
+          <div class="step reveal">
+            <div class="step-number">02</div>
+            <h4>Analyse</h4>
+            <p>Revue technique et juridique, entretiens avec vos équipes, tests et vérifications.</p>
+          </div>
+          <div class="step reveal">
+            <div class="step-number">03</div>
+            <h4>Synthèse</h4>
+            <p>Identification des risques, des non-conformités et des opportunités d’amélioration.</p>
+          </div>
+          <div class="step reveal">
+            <div class="step-number">04</div>
+            <h4>Recommandations</h4>
+            <p>Plan d’action priorisé, accompagnement à la mise en œuvre si vous le souhaitez.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chiffres clés -->
+    <section>
+      <div class="stats-container reveal">
+        <div class="stat-item">
+          <div class="stat-number">15+</div>
+          <div class="stat-label">audits réalisés</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">conformité RGPD</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">8</div>
+          <div class="stat-label">experts mobilisables</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">disponibilité</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pourquoi nous ? -->
+    <section style="background: var(--charcoal); padding: 5rem 2rem; max-width: none; border-bottom: 1px solid rgba(191,163,124,0.2);">
+      <div class="container" style="max-width: 1200px; margin: 0 auto;">
+        <div class="section-header reveal">
+          <h2>Pourquoi nous confier votre audit ?</h2>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 3rem; align-items: center;">
+          <div style="flex: 1 1 300px;" class="reveal">
+            <i class="fas fa-user-graduate" style="font-size: 8rem; color: var(--gilt); opacity: 0.7;"></i>
+          </div>
+          <div style="flex: 2 1 500px;" class="reveal">
+            <h3 style="color: var(--gilt); font-size: 2rem;">La double compétence en action</h3>
+            <p style="margin: 1.5rem 0;">Notre fondateur, juriste de formation et développeur, incarne cette synergie. Nous ne dissocions jamais le technique du juridique : un défaut de conformité peut cacher une faille de sécurité, et inversement. Cette vision 360° est notre signature.</p>
+            <p>Nous parlons le langage des avocats, des développeurs et des dirigeants. Un atout pour des audits sans angles morts.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to action final -->
+    <section class="contact-inline" id="contact">
+      <div class="reveal">
+        <h2 style="color: var(--gilt); font-size: 2.8rem;">Vous avez un besoin d’audit ou de conseil ?</h2>
+        <p style="margin: 2rem 0; font-size: 1.3rem;">Parlons de votre projet en toute confidentialité.</p>
+        <a href="vie.html" class="btn">Soumettre votre demande</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>ARCHITECTUS</h3>
+        <div class="tagline">ARCHIDUX · vision, innovation, legacy</div>
+        <p>Depuis le début, nous élevons la création digitale au rang d’art architectural. Chaque projet est unique, chaque détail est étudié.</p>
+      </div>
+      <div class="footer-links">
+        <h5>Services</h5>
+        <a href="web.html">Sites web</a>
+        <a href="application.html">Applications web</a>
+        <a href="legal.html">Legaltech</a>
+        <a href="audit.html">Audit & Conseil</a>
+      </div>
+      <div class="footer-links">
+        <h5>Explorer</h5>
+        <a href="vision.html">Vision</a>
+        <a href="realisations.html">Réalisations</a>
+        <a href="carrieres.html">Carrières</a>
+        <a href="idee.html">Votre idée</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="footer-newsletter">
+        <p>Inscrivez-vous pour recevoir nos réflexions sur l'architecture numérique.</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Votre adresse email">
+          <button><i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+    </div>
+    <div class="copyright">
+      <p>© 2025 ARCHITECTUS · ARCHIDUX. Tous droits réservés. · Mentions légales</p>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      // Menu mobile
+      const menuToggle = document.getElementById('menuToggle');
+      const navLinks = document.getElementById('navLinks');
+      if (menuToggle) {
+        menuToggle.addEventListener('click', () => {
+          navLinks.classList.toggle('active');
+        });
+      }
+
+      // Navbar scroll effect
+      const navbar = document.getElementById('navbar');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
+
+      // Reveal animations (Intersection Observer)
+      const revealElements = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+      revealElements.forEach(el => observer.observe(el));
+
+      // Re-run on load
+      window.addEventListener('load', () => {
+        observer.disconnect();
+        revealElements.forEach(el => observer.observe(el));
+      });
+
+      // Close mobile menu on link click
+      const links = document.querySelectorAll('.nav-links a');
+      links.forEach(link => {
+        link.addEventListener('click', () => {
+          navLinks.classList.remove('active');
+        });
+      });
+
+      // Subtle parallax on hero
+      const hero = document.querySelector('.hero');
+      document.addEventListener('mousemove', (e) => {
+        if (!hero) return;
+        const x = (e.clientX / window.innerWidth - 0.5) * 10;
+        const y = (e.clientY / window.innerHeight - 0.5) * 10;
+        hero.style.backgroundPosition = `${50 + x}% ${50 + y}%`;
+      });
+    })();
+  </script>
+</body>
+</html>
